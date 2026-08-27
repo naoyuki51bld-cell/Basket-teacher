@@ -2,100 +2,107 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1b5e20">
     <title>都留高男子バスケ部の軌跡 (顧問用)</title>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
     <style>
-        /* 緑基調のデザイン */
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f1f8e9; margin: 0; padding: 10px; color: #333; }
+        /* スマホアプリ風レイアウト */
+        html, body { height: 100%; margin: 0; padding: 0; background-color: #f1f8e9; font-family: 'Helvetica Neue', Arial, sans-serif; color: #333; -webkit-tap-highlight-color: transparent; }
+        .container { display: flex; flex-direction: column; height: 100%; max-width: 600px; width: 100%; margin: 0 auto; background: white; box-shadow: 0 0 15px rgba(0,0,0,0.1); overflow: hidden; }
         
-        /* ▼ 変更: 全体サイズを生徒・閲覧用と同じ 600px に統一 ▼ */
-        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; padding-bottom: 20px;}
+        /* 固定ヘッダー */
+        .app-header { flex-shrink: 0; background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%); color: white; padding: 15px; text-align: center; z-index: 10; }
+        .app-header h1 { margin: 0; font-size: 18px; letter-spacing: 1px; }
         
-        .app-header { background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%); color: white; padding: 15px; text-align: center; }
-        .app-header h1 { margin: 0; font-size: 20px; }
-        
-        /* タブ */
-        .tabs { display: flex; background: #fff; border-bottom: 2px solid #eee; overflow-x: auto; }
-        .tab-button { flex: 1; padding: 12px 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: none; background: transparent; color: #757575; white-space: nowrap;}
+        /* スクロール可能な固定タブ */
+        .tabs { flex-shrink: 0; display: flex; background: #fff; border-bottom: 1px solid #eee; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; z-index: 9; }
+        .tabs::-webkit-scrollbar { display: none; }
+        .tab-button { flex: 0 0 auto; padding: 12px 16px; font-size: 13px; font-weight: bold; cursor: pointer; border: none; background: transparent; color: #757575; white-space: nowrap; border-bottom: 3px solid transparent; transition: 0.2s;}
         .tab-button.active { color: #2e7d32; border-bottom: 3px solid #2e7d32; }
-        .tab-content { display: none; padding: 15px; }
+        
+        /* 独立スクロールするコンテンツエリア */
+        #authArea, #mainArea { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+        .tab-content { display: none; flex: 1; overflow-y: auto; padding: 15px; -webkit-overflow-scrolling: touch; padding-bottom: 40px; }
         .tab-content.active { display: block; }
         
-        /* フォーム系 */
+        /* フォーム系 (iOSズーム対策で16px) */
         .form-area { background: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-top: 15px; }
-        .form-group { margin-bottom: 12px; }
+        .form-group { margin-bottom: 15px; }
         .form-group label.title { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #1b5e20; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
         
         /* ラジオボタン */
-        .radio-group { display: flex; gap: 20px; align-items: center; padding: 5px 0; }
-        .radio-label { display: flex; align-items: center; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .radio-group { display: flex; gap: 15px; align-items: center; padding: 5px 0; flex-wrap: wrap;}
+        .radio-label { display: flex; align-items: center; cursor: pointer; font-size: 15px; font-weight: bold; }
         .radio-label input[type="radio"] { transform: scale(1.5); margin-right: 8px; accent-color: #388e3c; }
         
-        /* ボタン類 */
+        /* ボタン類 (タップしやすく) */
         .btn-group { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        .btn { padding: 10px; font-size: 13px; font-weight: bold; color: white; border: none; border-radius: 6px; cursor: pointer; flex: 1; min-width: 80px; display: flex; justify-content: center; align-items: center;}
+        .btn { padding: 12px; font-size: 15px; font-weight: bold; color: white; border: none; border-radius: 8px; cursor: pointer; flex: 1; min-width: 80px; display: flex; justify-content: center; align-items: center; text-align: center;}
+        .btn:active { opacity: 0.8; transform: scale(0.98); }
         .btn-primary { background: #388e3c; } .btn-success { background: #4CAF50; } .btn-danger { background: #f44336; } .btn-secondary { background: #9e9e9e; } 
         .btn-outline { background: white; color: #388e3c; border: 1px solid #388e3c; }
+        .btn-compact { padding: 6px 12px; font-size: 12px; min-width: auto; height: fit-content; border-radius: 6px;}
         
-        /* ▼ 変更: ログアウトやリロード用の小型ボタンのレイアウト調整 ▼ */
-        .btn-compact { padding: 4px 8px; font-size: 11px; min-width: auto; height: fit-content; margin-top: 0; box-shadow: none; border-radius: 4px; cursor: pointer; }
+        /* コントロールバー */
+        .filter-bar { display: flex; align-items: center; gap: 8px; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); margin-bottom: 15px; border: 1px solid #eee; flex-wrap: wrap; }
+        .filter-label { font-weight: bold; color: #2e7d32; font-size: 13px; white-space: nowrap; }
+        .filter-select { flex: 1; min-width: 120px; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; background: #fafafa; }
         
-        /* カレンダー */
-        #calendar { max-width: 100%; height: 450px; background: white; padding: 5px; border-radius: 8px; border: 1px solid #eee; }
-        .fc-event-title { font-size: 11px; font-weight: bold; white-space: normal !important; line-height: 1.2; }
-        .fc-h-event { border: none !important; }
+        /* テーブルの横スクロール対応 */
+        .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; border: 1px solid #eee; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; white-space: nowrap; }
+        th, td { border-bottom: 1px solid #eee; border-right: 1px solid #eee; padding: 10px; text-align: center; }
+        th { background: #1b5e20; color: white; position: sticky; top: 0; }
+        
+        /* カード類 */
+        .match-card { background: white; border: 1px solid #e0e0e0; border-left: 6px solid #388e3c; padding: 15px; margin-bottom: 15px; border-radius: 8px; position: relative; }
+        .practice-menu-card { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .stats-input { width: 50px !important; padding: 6px !important; text-align: center; font-size: 15px !important;}
+        .stat-col-badge { display:inline-block; background:#e0e0e0; padding:6px 10px; border-radius:15px; font-size:13px; margin-right:5px; margin-bottom:5px; }
+        .comment-box { background:#f5f5f5; padding:12px; border-radius:8px; margin-bottom:8px; font-size:14px; text-align:left; border-left:4px solid #ccc; line-height: 1.4;}
+        .comment-teacher { background:#e8f5e9; border-left:4px solid #388e3c; }
+        
+        .user-header { display: flex; justify-content: space-between; align-items: center; background: #e8f5e9; padding: 10px 15px; border-bottom: 1px solid #c8e6c9; font-size: 13px; font-weight: bold; flex-shrink: 0;}
+        
+        /* カレンダー調整 */
+        #calendar { background: white; padding: 5px; border-radius: 8px; border: 1px solid #eee; font-size: 12px; }
+        .fc-event-title { font-size: 10px; font-weight: bold; white-space: normal !important; line-height: 1.2; }
+        .fc-toolbar-title { font-size: 1.1em !important; }
+        .fc-button { padding: 0.3em 0.5em !important; font-size: 0.9em !important; }
         .fc-day-selected-copy { background-color: #c8e6c9 !important; box-shadow: inset 0 0 0 3px #388e3c !important; }
         .fc-day-selected-morning { background-color: #fff3e0 !important; box-shadow: inset 0 0 0 3px #ff9800 !important; }
-        
-        /* テーブル */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; background: white; }
-        th, td { border: 1px solid #eee; padding: 8px; text-align: center; }
-        th { background: #1b5e20; color: white; }
-        
-        /* 各種カード・フィルター */
-        .match-card { background: white; border: 1px solid #e0e0e0; border-left: 6px solid #388e3c; padding: 15px; margin-bottom: 15px; border-radius: 8px; position: relative; }
-        .stats-input { width: 50px; padding: 4px; text-align: center; border: 1px solid #ccc; }
-        .stat-col-badge { display:inline-block; background:#e0e0e0; padding:4px 8px; border-radius:15px; font-size:12px; margin-right:5px; margin-bottom:5px; }
-        .comment-box { background:#f5f5f5; padding:10px; border-radius:6px; margin-bottom:8px; font-size:13px; text-align:left; border-left:4px solid #ccc;}
-        .comment-teacher { background:#e8f5e9; border-left:4px solid #388e3c; }
-        .user-header { display: flex; justify-content: space-between; align-items: center; background: #e8f5e9; padding: 8px 12px; margin: 15px; border-radius: 8px; border-left: 4px solid #388e3c; font-size: 13px; font-weight: bold;}
-        .practice-menu-card { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 6px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .filter-bar { display: flex; align-items: center; gap: 10px; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 15px; border: 1px solid #eee; }
-        .filter-label { font-weight: bold; color: #2e7d32; font-size: 12px; white-space: nowrap; }
-        .filter-select { flex: 1; padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; background: #fafafa; outline: none; }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="app-header">
-        <h1>🏀 都留高男子バスケ部の軌跡 (顧問用)</h1>
+        <h1>🏀 都留高男子バスケ部の軌跡</h1>
         <div id="authStatus" style="font-size:12px; color:#ffeb3b; display:none; margin-top:5px;">接続中...</div>
     </div>
     
-    <div id="authArea" style="display:none; padding: 20px;">
+    <div id="authArea" style="display:none; padding: 20px; overflow-y:auto;">
         <div id="loginForm">
-            <h3 style="color:#1b5e20;">先生用ログイン</h3>
+            <h3 style="color:#1b5e20; text-align:center;">先生用ログイン</h3>
             <div class="form-group"><input type="text" id="loginId" placeholder="ログインID"></div>
             <div class="form-group"><input type="password" id="loginPass" placeholder="パスワード"></div>
             <button class="btn btn-primary" onclick="window.login()">ログイン</button>
-            <button class="btn btn-outline" style="margin-top:10px;" onclick="window.toggleAuth('register')">新規コーチアカウント作成</button>
+            <button class="btn btn-outline" style="margin-top:15px;" onclick="window.toggleAuth('register')">新規コーチアカウント作成</button>
         </div>
         <div id="registerForm" style="display: none;">
-            <h3 style="color:#1b5e20;">コーチアカウント作成</h3>
+            <h3 style="color:#1b5e20; text-align:center;">コーチアカウント作成</h3>
             <div class="form-group"><input type="text" id="regId" placeholder="ログインID"></div>
             <div class="form-group"><input type="password" id="regPass" placeholder="パスワード"></div>
             <div class="form-group"><input type="text" id="regName" placeholder="名前 (例: 山田コーチ)"></div>
             <button class="btn btn-primary" onclick="window.register()">作成する</button>
-            <button class="btn btn-outline" style="margin-top:10px;" onclick="window.toggleAuth('login')">戻る</button>
+            <button class="btn btn-outline" style="margin-top:15px;" onclick="window.toggleAuth('login')">戻る</button>
         </div>
     </div>
 
     <div id="mainArea" style="display: none;">
         <div class="user-header">
             <div><span id="dispName"></span> 先生</div>
-            <!-- ▼ 変更: ログアウトボタンをコンパクト化 ▼ -->
             <button class="btn-compact" style="background:#9e9e9e; color:white; border:none;" onclick="window.logout()">ログアウト</button>
         </div>
 
@@ -112,9 +119,8 @@
 
         <!-- 1. 予定表 -->
         <div id="tab-schedule" class="tab-content active">
-            <!-- 📢 顧問からの連絡設定枠 -->
             <div class="form-area" style="background:#fff3e0; border-color:#ffb74d; margin-top:0; margin-bottom:15px;">
-                <h3 style="margin-top:0; color:#e65100;">📢 顧問からの連絡（全体向け）</h3>
+                <h4 style="margin-top:0; color:#e65100;">📢 顧問からの連絡（全体向け）</h4>
                 <textarea id="noticeInput" rows="2" placeholder="生徒・保護者向けの連絡事項を入力..."></textarea>
                 <div class="btn-group" style="margin-top:10px;">
                     <button class="btn btn-primary" style="background:#ff9800;" onclick="window.saveNotice(true)">表示して保存</button>
@@ -151,42 +157,42 @@
                 </div>
             </div>
 
-            <div id="scheduleHistoryArea" class="form-area" style="margin-top: 20px; background: #fff;">
+            <div id="scheduleHistoryArea" class="form-area">
                 <h4 style="color:#1b5e20; margin-top:0; border-bottom:1px solid #ccc; padding-bottom:5px;">🕒 予定の変更履歴 (最新10件)</h4>
-                <ul id="scheduleHistoryList" style="font-size:13px; color:#555; padding-left:20px; margin-bottom:0;">読み込み中...</ul>
+                <ul id="scheduleHistoryList" style="font-size:13px; color:#555; padding-left:20px; margin-bottom:0; line-height:1.6;">読み込み中...</ul>
             </div>
         </div>
 
         <!-- 2. 試合入力 -->
         <div id="tab-match-input" class="tab-content">
-            <div class="form-area">
-                <h3 id="matchFormTitle" style="margin-top:0; color:#1b5e20;">試合結果の登録</h3>
+            <div class="form-area" style="margin-top:0;">
+                <h3 id="matchFormTitle" style="margin-top:0; color:#1b5e20;">✍️ 試合結果の登録</h3>
                 <input type="hidden" id="matchId"><input type="hidden" id="matchExistingImage">
                 <div class="form-group"><label class="title">日付</label><input type="date" id="matchDate"></div>
                 <div class="form-group"><label class="title">種別</label><select id="matchType"><option>公式戦</option><option>練習試合</option></select></div>
-                <div class="form-group"><label class="title">大会・試合名</label><input type="text" id="matchName"></div>
+                <div class="form-group"><label class="title">大会・試合名</label><input type="text" id="matchName" placeholder="例: インターハイ予選"></div>
                 <div class="form-group"><label class="title">対戦校</label><input type="text" id="matchOpponent"></div>
-                <div class="form-group" style="display:flex; gap:20px; text-align:center;">
-                    <div style="flex:1;"><label class="title" style="color:#388e3c;">都留高 得点</label><input type="number" id="scoreOurs" style="font-size:20px; font-weight:bold;"></div>
-                    <div style="flex:1;"><label class="title" style="color:#f44336;">相手校 得点</label><input type="number" id="scoreTheirs" style="font-size:20px; font-weight:bold;"></div>
+                <div class="form-group" style="display:flex; gap:15px; text-align:center; background:#e8f5e9; padding:15px; border-radius:8px;">
+                    <div style="flex:1;"><label class="title" style="color:#2e7d32;">都留高</label><input type="number" id="scoreOurs" style="font-size:24px; font-weight:bold; text-align:center;"></div>
+                    <div style="flex:1;"><label class="title" style="color:#c62828;">相手校</label><input type="number" id="scoreTheirs" style="font-size:24px; font-weight:bold; text-align:center;"></div>
                 </div>
                 
-                <div class="form-group"><label class="title">関連リンク</label>
-                    <div style="display:flex; gap:5px; margin-bottom:5px;"><input type="text" id="linkTitle1" placeholder="題名1"><input type="url" id="linkUrl1" placeholder="URL1"></div>
-                    <div style="display:flex; gap:5px; margin-bottom:5px;"><input type="text" id="linkTitle2" placeholder="題名2"><input type="url" id="linkUrl2" placeholder="URL2"></div>
-                    <div style="display:flex; gap:5px; margin-bottom:5px;"><input type="text" id="linkTitle3" placeholder="題名3"><input type="url" id="linkUrl3" placeholder="URL3"></div>
-                    <div style="display:flex; gap:5px; margin-bottom:5px;"><input type="text" id="linkTitle4" placeholder="題名4"><input type="url" id="linkUrl4" placeholder="URL4"></div>
+                <div class="form-group"><label class="title">🔗 関連リンク</label>
+                    <div style="display:flex; gap:5px; margin-bottom:8px;"><input type="text" id="linkTitle1" placeholder="題名1"><input type="url" id="linkUrl1" placeholder="URL1"></div>
+                    <div style="display:flex; gap:5px; margin-bottom:8px;"><input type="text" id="linkTitle2" placeholder="題名2"><input type="url" id="linkUrl2" placeholder="URL2"></div>
+                    <div style="display:flex; gap:5px; margin-bottom:8px;"><input type="text" id="linkTitle3" placeholder="題名3"><input type="url" id="linkUrl3" placeholder="URL3"></div>
+                    <div style="display:flex; gap:5px; margin-bottom:8px;"><input type="text" id="linkTitle4" placeholder="題名4"><input type="url" id="linkUrl4" placeholder="URL4"></div>
                     <div style="display:flex; gap:5px;"><input type="text" id="linkTitle5" placeholder="題名5"><input type="url" id="linkUrl5" placeholder="URL5"></div>
                 </div>
-                <div class="form-group"><label class="title">画像添付 <span style="font-weight:normal;font-size:11px;">(※上書きされます)</span></label><input type="file" id="matchImage" accept="image/*"></div>
+                <div class="form-group"><label class="title">📷 画像添付 <span style="font-weight:normal;font-size:11px;">(上書き)</span></label><input type="file" id="matchImage" accept="image/*" style="background:white;"></div>
                 
-                <h4 style="margin-top:20px; color:#1b5e20; border-bottom:2px solid #eee; padding-bottom:5px;">スタッツ記録項目</h4>
+                <h4 style="margin-top:25px; color:#1b5e20; border-bottom:2px solid #eee; padding-bottom:5px;">📊 スタッツ記録項目</h4>
                 <div id="statColsDisplay" style="margin-bottom:10px;"></div>
-                <div style="display:flex; gap:10px; margin-bottom:15px;"><input type="text" id="newStatCol" placeholder="追加項目名 (例: アシスト)" style="flex:2;"><button class="btn btn-secondary" style="flex:1;" onclick="window.addStatCol()">+ 追加</button></div>
-                <div id="statsInputArea" style="max-height:300px; overflow-y:auto; background:white; padding:5px; border:1px solid #eee;"></div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="window.saveMatch()">試合を保存</button>
-                    <button class="btn btn-danger" id="btnDeleteMatch" style="display:none;" onclick="window.deleteMatch()">試合を削除</button>
+                <div style="display:flex; gap:10px; margin-bottom:15px;"><input type="text" id="newStatCol" placeholder="追加項目名 (例: アシスト)"><button class="btn btn-secondary" style="flex:0 0 auto; min-width:60px;" onclick="window.addStatCol()">+ 追加</button></div>
+                <div id="statsInputArea" style="max-height:400px; overflow-y:auto; background:white; border-radius:8px; border:1px solid #eee;"></div>
+                <div class="btn-group" style="margin-top:20px;">
+                    <button class="btn btn-primary" onclick="window.saveMatch()">保存する</button>
+                    <button class="btn btn-danger" id="btnDeleteMatch" style="display:none;" onclick="window.deleteMatch()">削除</button>
                     <button class="btn btn-secondary" onclick="window.clearMatchForm()">クリア</button>
                 </div>
             </div>
@@ -195,10 +201,9 @@
         <!-- 3. 試合閲覧 -->
         <div id="tab-match-view" class="tab-content">
             <div class="filter-bar">
-                <div class="filter-label">種別絞り込み</div>
-                <select id="matchFilter" class="filter-select" onchange="window.loadMatches()"><option>すべて</option><option>公式戦</option><option>練習試合</option></select>
-                <!-- ▼ 変更: リロードボタンをコンパクト化 ▼ -->
-                <button class="btn-outline btn-compact" style="padding:6px 12px; font-size:12px;" onclick="window.reloadMatches()">🔄 更新</button>
+                <div class="filter-label">種別</div>
+                <select id="matchFilter" class="filter-select" onchange="window.loadMatches()"><option value="すべて">すべて</option><option value="公式戦">公式戦</option><option value="練習試合">練習試合</option></select>
+                <button class="btn-outline btn-compact" style="padding:8px; font-size:13px;" onclick="window.reloadMatches()">🔄 更新</button>
             </div>
             <div id="matchListArea">読み込み中...</div>
         </div>
@@ -208,8 +213,7 @@
             <div class="filter-bar">
                 <div class="filter-label">日付</div>
                 <select id="attendanceDateSelect" class="filter-select" onchange="window.renderAttendanceList()"></select>
-                <!-- ▼ 変更: リロードボタンをコンパクト化 ▼ -->
-                <button class="btn-outline btn-compact" style="padding:6px 12px; font-size:12px;" onclick="window.reloadAttendance()">🔄 更新</button>
+                <button class="btn-outline btn-compact" style="padding:8px; font-size:13px;" onclick="window.reloadAttendance()">🔄 更新</button>
             </div>
             <div id="attendanceListArea">日付を選択してください。</div>
         </div>
@@ -219,20 +223,19 @@
             <div class="filter-bar">
                 <div class="filter-label">日付</div>
                 <select id="practiceDateSelect" class="filter-select" onchange="window.renderPractice()"></select>
-                <!-- ▼ 変更: リロードボタンをコンパクト化 ▼ -->
-                <button class="btn-outline btn-compact" style="padding:6px 12px; font-size:12px;" onclick="window.reloadPractice()">🔄 更新</button>
+                <button class="btn-outline btn-compact" style="padding:8px; font-size:13px;" onclick="window.reloadPractice()">🔄 更新</button>
             </div>
             
-            <div class="form-area" style="background:white;">
+            <div class="form-area" style="background:white; margin-top:0;">
                 <h4 style="color:#1b5e20; border-bottom:2px solid #eee; margin-top:0; padding-bottom:5px;">✅ 本日の出席者</h4>
-                <div id="practiceAttendees" style="font-size:13px; color:#555; margin-bottom:20px;">日付を選択してください</div>
+                <div id="practiceAttendees" style="font-size:14px; color:#444; margin-bottom:20px; font-weight:bold;">日付を選択してください</div>
                 
                 <h4 style="color:#1b5e20; border-bottom:2px solid #eee; padding-bottom:5px; display:flex; justify-content:space-between; align-items:center;">
                     🏀 練習メニュー
-                    <button type="button" class="btn btn-outline btn-compact" style="margin:0;" onclick="window.addPracticeMenu()">+ メニュー追加</button>
+                    <button type="button" class="btn btn-outline btn-compact" style="margin:0;" onclick="window.addPracticeMenu()">+ 追加</button>
                 </h4>
                 <div id="practiceMenusArea"></div>
-                <button class="btn btn-success" style="margin-top:15px; width:100%;" onclick="window.savePractice()">この日の練習記録を保存</button>
+                <button class="btn btn-success" style="margin-top:15px; width:100%; padding:15px;" onclick="window.savePractice()">この日の練習記録を保存</button>
 
                 <div id="practiceCommentsArea"></div>
             </div>
@@ -241,7 +244,7 @@
         <!-- 6. 統計 -->
         <div id="tab-stats" class="tab-content">
             <div class="filter-bar">
-                <div class="filter-label">集計期間</div>
+                <div class="filter-label">期間</div>
                 <select id="statPeriodSelect" class="filter-select" onchange="window.renderStats()"></select>
             </div>
             <div id="statsListArea"></div>
@@ -253,11 +256,16 @@
         <!-- 8. 設定 -->
         <div id="tab-settings" class="tab-content">
             <div class="form-area" style="margin-top:0;">
-                <h3 style="margin-top:0; color:#1b5e20;">🔒 閲覧アプリ用パスワード設定</h3>
-                <p style="font-size:12px; color:#666;">保護者やOBが利用する閲覧専用アプリのパスワード（数字4桁）</p>
+                <h3 style="margin-top:0; color:#1b5e20;">⚙️ メニュー種別の設定</h3>
+                <div id="settingsMenuTypesArea" style="margin-bottom:15px;"></div>
+                <div style="display:flex; gap:10px;"><input type="text" id="newMenuType" placeholder="新しい種別名"><button class="btn btn-primary" style="flex:0 0 auto; margin:0;" onclick="window.addMenuType()">追加</button></div>
+            </div>
+            <div class="form-area" style="margin-top:15px;">
+                <h3 style="margin-top:0; color:#1b5e20;">🔒 閲覧パスワード</h3>
+                <p style="font-size:12px; color:#666;">保護者やOB用アプリのパスワード(4桁)</p>
                 <div style="display:flex; gap:10px;">
-                    <input type="number" id="viewerPasswordInput" placeholder="例: 1234" style="flex:2;">
-                    <button class="btn btn-primary" style="flex:1; margin:0;" onclick="window.saveViewerPassword()">設定</button>
+                    <input type="number" id="viewerPasswordInput" placeholder="例: 1234">
+                    <button class="btn btn-primary" style="flex:0 0 auto; margin:0;" onclick="window.saveViewerPassword()">設定</button>
                 </div>
             </div>
         </div>
@@ -274,7 +282,7 @@
     const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app); const storage = getStorage(app);
     
     let calendar, globalSchedules = [], globalAttendances = [], globalStudents = [], globalTeachers = [], globalMatches = [], globalMorning = [];
-    let globalPractices = [];
+    let globalPractices = [], globalMenuTypes = ['フットワーク', 'シューティング', '対人', 'ゲーム', 'その他'];
     let isDuplicating = false, selectedCopyDates = [], duplicatedData = null; 
     let isMorningMode = false, selectedMorningDates = [];
     let currentStatCols = ['得点', 'リバウンド']; let currentUser = null;
@@ -289,7 +297,7 @@
             const savedId = localStorage.getItem('basketball_teacher_id');
             if (savedId) { const docSnap = await getDoc(doc(db, "teachers", savedId)); if (docSnap.exists()) { currentUser = { id: savedId, ...docSnap.data() }; document.getElementById('authStatus').style.display = 'none'; showMainScreen(); return; } }
             document.getElementById('authStatus').style.display = 'none';
-            document.getElementById('authArea').style.display = 'block';
+            document.getElementById('authArea').style.display = 'flex';
         } catch(e) { document.getElementById('authStatus').innerText = "接続エラー"; }
     });
 
@@ -299,7 +307,7 @@
     window.logout = () => { if(confirm("ログアウト?")) { localStorage.removeItem('basketball_teacher_id'); location.reload(); } };
 
     async function showMainScreen() {
-        document.getElementById('authArea').style.display = 'none'; document.getElementById('mainArea').style.display = 'block';
+        document.getElementById('authArea').style.display = 'none'; document.getElementById('mainArea').style.display = 'flex';
         document.getElementById('dispName').innerText = currentUser.name;
         await loadSettings(); await loadAllData(); initCalendar(); renderStatColsUI();
     }
@@ -307,9 +315,11 @@
     async function loadSettings() {
         const snap = await getDoc(doc(db, "settings", "general"));
         if(snap.exists()) {
+            if(snap.data().menuTypes) globalMenuTypes = snap.data().menuTypes;
             if(snap.data().viewerPassword) document.getElementById('viewerPasswordInput').value = snap.data().viewerPassword;
             if(snap.data().noticeText) document.getElementById('noticeInput').value = snap.data().noticeText;
         }
+        renderSettingsUI();
     }
     window.saveViewerPassword = async function() {
         const pw = document.getElementById('viewerPasswordInput').value; if (!/^\d{4}$/.test(pw)) return alert("4桁の数字を入力してください");
@@ -332,24 +342,28 @@
     }
 
     async function loadAllData() {
-        globalSchedules = (await getDocs(collection(db, "schedules"))).docs.map(d => ({ id: d.id, ...d.data() }));
-        globalAttendances = (await getDocs(collection(db, "attendance"))).docs.map(d => ({ id: d.id, ...d.data() }));
-        globalStudents = (await getDocs(collection(db, "students"))).docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (parseInt(a.number)||999) - (parseInt(b.number)||999));
-        globalTeachers = (await getDocs(collection(db, "teachers"))).docs.map(d => ({ id: d.id, ...d.data() }));
-        globalMatches = (await getDocs(query(collection(db, "matches"), orderBy("date", "desc")))).docs.map(d => ({ id: d.id, ...d.data() }));
-        globalMorning = (await getDocs(collection(db, "morning"))).docs.map(d => d.id);
-        globalPractices = (await getDocs(collection(db, "practices"))).docs.map(d => ({ id: d.id, ...d.data() }));
+        const [sSnap, aSnap, stSnap, tSnap, mSnap, moSnap, pSnap] = await Promise.all([
+            getDocs(collection(db, "schedules")), getDocs(collection(db, "attendance")), getDocs(collection(db, "students")),
+            getDocs(collection(db, "teachers")), getDocs(query(collection(db, "matches"), orderBy("date", "desc"))),
+            getDocs(collection(db, "morning")), getDocs(collection(db, "practices"))
+        ]);
+
+        globalSchedules = sSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        globalAttendances = aSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        globalStudents = stSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (parseInt(a.number)||999) - (parseInt(b.number)||999));
+        globalTeachers = tSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        globalMatches = mSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        globalMorning = moSnap.docs.map(d => d.id);
+        globalPractices = pSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
         const dates = [...new Set(globalSchedules.map(s => s.date))].sort();
         const todayStr = new Date(new Date().getTime() - new Date().getTimezoneOffset()*60000).toISOString().split('T')[0];
 
-        // 出欠プルダウン
         const aSel = document.getElementById('attendanceDateSelect'); const prevAVal = aSel.value; 
         aSel.innerHTML = '<option value="">-- 日付を選択 --</option>';
         dates.forEach(d => aSel.innerHTML += `<option value="${d}">${d} (${getWeekday(d)})</option>`);
         if (prevAVal && dates.includes(prevAVal)) aSel.value = prevAVal; else if (dates.includes(todayStr)) aSel.value = todayStr;
         
-        // 練習記録プルダウン
         const pSel = document.getElementById('practiceDateSelect'); const prevPVal = pSel.value;
         pSel.innerHTML = '<option value="">-- 日付を選択 --</option>';
         dates.forEach(d => pSel.innerHTML += `<option value="${d}">${d} (${getWeekday(d)})</option>`);
@@ -393,7 +407,7 @@
 
     function initCalendar() {
         calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-            initialView: 'dayGridMonth', locale: 'ja', headerToolbar: { left: 'prev,next', center: 'title', right: 'today' },
+            height: 'auto', contentHeight: 'auto', initialView: 'dayGridMonth', locale: 'ja', headerToolbar: { left: 'prev,next', center: 'title', right: 'today' },
             events: getEvents(),
             eventContent: function(arg) {
                 let d = arg.event.extendedProps;
@@ -434,7 +448,7 @@
     window.toggleMorningMode = function() {
         const targetMode = !isMorningMode; window.clearForm(); isMorningMode = targetMode; isDuplicating = false; 
         const btn = document.getElementById('btnMorningMode'), btnConfirm = document.getElementById('btnConfirmMorning');
-        if(isMorningMode) { selectedMorningDates = [...globalMorning]; btn.innerText = "🌅 朝練設定モード (キャンセル)"; btn.style.background = "#757575"; btnConfirm.style.display = "block"; showMsg('msg-schedule', "日付をタップして〇をつけ、「決定」を押してください", "blue"); } 
+        if(isMorningMode) { selectedMorningDates = [...globalMorning]; btn.innerText = "🌅 朝練設定 (キャンセル)"; btn.style.background = "#757575"; btnConfirm.style.display = "block"; showMsg('msg-schedule', "日付をタップして〇をつけ「決定」", "blue"); } 
         else { btn.innerText = "🌅 朝練設定モード (オフ)"; btn.style.background = "#ff9800"; btnConfirm.style.display = "none"; } calendar.render();
     };
     window.confirmMorning = async function() {
@@ -443,11 +457,11 @@
             const additions = selectedMorningDates.filter(d => !globalMorning.includes(d)), removals = globalMorning.filter(d => !selectedMorningDates.includes(d));
             for(let date of additions) await setDoc(doc(db, "morning", date), { active: true }); for(let date of removals) await deleteDoc(doc(db, "morning", date));
             globalMorning = [...selectedMorningDates]; showMsg('msg-schedule', "朝練の設定を保存しました！", "green");
-        } catch(e) { showMsg('msg-schedule', "エラーが発生しました", "red"); } finally { btnConfirm.innerText = "✅ 朝練設定を決定"; window.toggleMorningMode(); }
+        } catch(e) { showMsg('msg-schedule', "エラー", "red"); } finally { btnConfirm.innerText = "✅ 朝練設定を決定"; window.toggleMorningMode(); }
     };
     window.startCopyMode = function() {
         duplicatedData = { eventType: document.getElementById('eventType').value, remarks: document.getElementById('remarks').value, location: document.getElementById('location').value, timeType: document.querySelector('input[name="timeType"]:checked').value, startTime: document.getElementById('startTime').value, endTime: document.getElementById('endTime').value, halfType: document.getElementById('halfType').value };
-        window.clearForm(); isDuplicating = true; isMorningMode = false; selectedCopyDates = []; document.getElementById('formTitle').innerText = "🔄 複数複製モード"; document.getElementById('btnSave').style.display = 'none'; document.getElementById('btnCopy').style.display = 'none'; document.getElementById('btnDelete').style.display = 'none'; document.getElementById('btnConfirmCopy').style.display = "block"; showMsg('msg-schedule', "複製先の日付を複数タップして「決定」を押してください", "blue"); document.getElementById('calendar').scrollIntoView({ behavior: 'smooth' });
+        window.clearForm(); isDuplicating = true; isMorningMode = false; selectedCopyDates = []; document.getElementById('formTitle').innerText = "🔄 複数複製モード"; document.getElementById('btnSave').style.display = 'none'; document.getElementById('btnCopy').style.display = 'none'; document.getElementById('btnDelete').style.display = 'none'; document.getElementById('btnConfirmCopy').style.display = "block"; showMsg('msg-schedule', "複製先の日付を複数タップして「決定」", "blue"); document.getElementById('calendar').scrollIntoView({ behavior: 'smooth' });
     };
     window.confirmCopySchedule = async function() {
         if(selectedCopyDates.length === 0) return alert("日付が選択されていません");
@@ -490,11 +504,11 @@
     function renderStatColsUI() { let html = ""; currentStatCols.forEach(c => { html += `<span class="stat-col-badge">${c} <button style="border:none;background:transparent;cursor:pointer;color:red;" onclick="window.removeStatCol('${c}')">×</button></span>`; }); document.getElementById('statColsDisplay').innerHTML = html; }
     function renderStatsInputTable(existingStats = [], existingCols = null) {
         if (existingCols && existingCols.length > 0) currentStatCols = existingCols; renderStatColsUI();
-        let html = "<table><tr><th style='width:40px;'>背</th><th>名前</th>"; currentStatCols.forEach(c => html += `<th>${c}</th>`); html += "</tr>";
+        let html = "<div class='table-wrap'><table><tr><th style='width:40px;'>背</th><th>名前</th>"; currentStatCols.forEach(c => html += `<th>${c}</th>`); html += "</tr>";
         globalStudents.forEach(p => {
             let oldStat = existingStats.find(s => s.name === p.name); html += `<tr><td>${p.number||'-'}</td><td style="text-align:left;">${p.name}</td>`;
             currentStatCols.forEach(c => { let val = (oldStat && oldStat.values && oldStat.values[c]) !== undefined ? oldStat.values[c] : ''; html += `<td><input type="number" class="stats-input" data-name="${p.name}" data-col="${c}" value="${val}"></td>`; }); html += "</tr>";
-        }); document.getElementById('statsInputArea').innerHTML = html + "</table>";
+        }); document.getElementById('statsInputArea').innerHTML = html + "</table></div>";
     }
 
     window.saveMatch = async function() {
@@ -534,7 +548,8 @@
     window.toggleDetails = function(id) { const el = document.getElementById(`details-${id}`); el.style.display = el.style.display === 'none' ? 'block' : 'none'; };
     
     window.postComment = async function(matchId) {
-        const text = document.getElementById(`commentInput-${matchId}`).value.trim(); if(!text) return; const match = globalMatches.find(m => m.id === matchId); const refs = match.reflections || [];
+        const text = document.getElementById(`commentInput-${matchId}`).value.trim(); if(!text) return;
+        const match = globalMatches.find(m => m.id === matchId); const refs = match.reflections || [];
         refs.push({ id: Date.now().toString(), authorId: currentUser.id, authorName: currentUser.name, role: currentUser.role, text: text, createdAt: new Date().toISOString() });
         await updateDoc(doc(db, "matches", matchId), { reflections: refs }); document.getElementById(`commentInput-${matchId}`).value = ""; await loadAllData(); window.loadMatches();
     };
@@ -548,15 +563,15 @@
         const filter = document.getElementById('matchFilter').value; let html = "";
         globalMatches.forEach(m => {
             if(filter !== 'すべて' && m.type !== filter) return;
-            const res = m.scoreOurs > m.scoreTheirs ? "<span style='color:#e53935'>勝利</span>" : (m.scoreOurs < m.scoreTheirs ? "<span style='color:#1e88e5'>敗北</span>" : "引分");
+            const res = m.scoreOurs > m.scoreTheirs ? "<span style='color:#f44336'>勝利</span>" : (m.scoreOurs < m.scoreTheirs ? "<span style='color:#1976d2'>敗北</span>" : "引分");
             let imgHtml = m.imageUrl ? `<img src="${m.imageUrl}" style="max-width:100%; border-radius:4px; margin-top:10px;">` : '';
             let linksHtml = ""; for(let i=1; i<=5; i++) if(m['linkUrl'+i]) linksHtml += `<a href="${m['linkUrl'+i]}" target="_blank" style="display:inline-block; margin-right:15px; margin-bottom:8px; color:#1b5e20; font-weight:bold; text-decoration:none;">🔗 ${m['linkTitle'+i]||'リンク'+i}</a>`;
             if(linksHtml) linksHtml = `<div style="margin:10px 0; font-size:12px; background:#e8f5e9; padding:8px; border-radius:4px;">${linksHtml}</div>`;
             
             let statsHtml = "";
             if (m.stats && m.stats.length > 0 && m.statColumns) {
-                statsHtml = `<table style="font-size:12px; margin-top:10px;"><tr><th style="width:40px;">背番</th><th>名前</th>`; m.statColumns.forEach(c => statsHtml += `<th>${c}</th>`); statsHtml += `</tr>`;
-                m.stats.forEach(st => { statsHtml += `<tr><td>${st.number||'-'}</td><td style="text-align:left;">${st.name}</td>`; m.statColumns.forEach(c => statsHtml += `<td>${st.values[c]!==undefined?st.values[c]:''}</td>`); statsHtml += `</tr>`; }); statsHtml += "</table>";
+                statsHtml = `<div class='table-wrap'><table style="font-size:12px; margin-top:10px;"><tr><th style="width:40px;">背番</th><th>名前</th>`; m.statColumns.forEach(c => statsHtml += `<th>${c}</th>`); statsHtml += `</tr>`;
+                m.stats.forEach(st => { statsHtml += `<tr><td>${st.number||'-'}</td><td style="text-align:left;">${st.name}</td>`; m.statColumns.forEach(c => statsHtml += `<td>${st.values[c]!==undefined?st.values[c]:''}</td>`); statsHtml += `</tr>`; }); statsHtml += "</table></div>";
             }
 
             let refs = m.reflections || [];
@@ -569,10 +584,10 @@
                     <div>${c.text}</div>
                     <div style="text-align:right; margin-top:5px;">
                         ${(c.authorId === currentUser.id) ? `<button class="btn-compact" style="background:transparent; border:none; color:#1976d2; cursor:pointer;" onclick="window.editComment('${m.id}','${c.id}')">編集</button>` : ''}
-                        ${(c.authorId === currentUser.id) ? `<button class="btn-compact" style="background:transparent; border:none; color:#d32f2f; cursor:pointer;" onclick="window.deleteComment('${m.id}','${c.id}')">削除</button>` : ''}
+                        <button class="btn-compact" style="background:transparent; border:none; color:#d32f2f; cursor:pointer;" onclick="window.deleteComment('${m.id}','${c.id}')">削除</button>
                     </div></div>`;
             });
-            commHtml += `<textarea id="commentInput-${m.id}" style="width:100%; padding:8px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; margin-top:10px;" rows="2" placeholder="コーチとしてコメントする..."></textarea><button class="btn btn-primary" style="padding:10px; font-size:13px; margin-top:8px; width:100%;" onclick="window.postComment('${m.id}')">投稿する</button></div>`;
+            commHtml += `<textarea id="commentInput-${m.id}" style="width:100%; padding:8px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; margin-top:10px;" rows="2" placeholder="反省や感想を入力..."></textarea><button class="btn btn-primary btn-compact" style="margin-top:5px; width:100%;" onclick="window.postComment('${m.id}')">投稿</button></div>`;
 
             html += `<div class="match-card"><button class="btn btn-secondary btn-compact" style="position:absolute; top:15px; right:15px;" onclick="window.editMatch('${m.id}')">編集</button>
                 <span style="background:#ff9800; color:white; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:bold;">${m.type||'試合'}</span>
@@ -587,7 +602,7 @@
     window.reloadAttendance = async function() { document.getElementById('attendanceListArea').innerHTML = "最新読込中..."; await loadAllData(); window.renderAttendanceList(); };
     window.renderAttendanceList = function() {
         const date = document.getElementById('attendanceDateSelect').value; if(!date) return document.getElementById('attendanceListArea').innerHTML = "日付を選択してください";
-        const dayData = globalAttendances.filter(a => a.date === date); let html = "<table><tr><th style='width:40px;'>背</th><th>名前</th><th>出欠</th><th>理由</th><th></th></tr>";
+        const dayData = globalAttendances.filter(a => a.date === date); let html = "<div class='table-wrap'><table><tr><th style='width:40px;'>背</th><th>名前</th><th>出欠</th><th>理由</th><th></th></tr>";
         
         globalStudents.forEach(p => {
             const a = dayData.find(x => x.name === p.name) || {status:'未入力', reason:''}; const bg = a.status === '欠席' ? 'background-color: #ffebee;' : '';
@@ -595,7 +610,7 @@
             <td><select id="st_${p.name}" style="padding:4px;"><option ${a.status==='出席'?'selected':''}>出席</option><option ${a.status==='欠席'?'selected':''}>欠席</option><option ${a.status==='遅刻'?'selected':''}>遅刻</option><option ${a.status==='早退'?'selected':''}>早退</option><option ${a.status==='未入力'?'selected':''}>未入力</option></select></td>
             <td><input type="text" id="re_${p.name}" value="${a.reason}" style="padding:4px; width:90%;"></td>
             <td><button class="btn btn-primary btn-compact" onclick="window.saveAtt('${date}','${p.name}')">保存</button></td></tr>`;
-        }); document.getElementById('attendanceListArea').innerHTML = html + "</table>";
+        }); document.getElementById('attendanceListArea').innerHTML = html + "</table></div>";
     };
     window.saveAtt = async function(d, n) { await setDoc(doc(db, "attendance", `${d}_${n}`), { date: d, name: n, status: document.getElementById(`st_${n}`).value, reason: document.getElementById(`re_${n}`).value, updatedAt: new Date() }); alert("更新しました"); await loadAllData(); window.renderAttendanceList(); };
 
@@ -603,7 +618,7 @@
     window.reloadPractice = async function() { await loadAllData(); window.renderPractice(); };
     window.syncPracticeDataFromDOM = function() {
         currentPracticeData.menus.forEach((m, i) => {
-            let titleEl = document.getElementById(`p_title_${i}`); if(titleEl) m.title = titleEl.value;
+            let typeEl = document.getElementById(`p_type_${i}`); if(typeEl) m.type = typeEl.value;
             if(m.detailType === 'text') { let textEl = document.getElementById(`p_text_${i}`); if(textEl) m.text = textEl.value; }
             if(m.detailType === 'stats') { globalStudents.forEach(st => { m.statCols.forEach(c => { let el = document.getElementById(`p_stat_${i}_${st.id}_${c}`); if(el) { if(!m.stats[st.id]) m.stats[st.id] = {}; m.stats[st.id][c] = el.value; }}); }); }
             if(m.links) { m.links.forEach((l, j) => { let t = document.getElementById(`p_link_title_${i}_${j}`); let u = document.getElementById(`p_link_url_${i}_${j}`); if(t) l.title = t.value; if(u) l.url = u.value; }); }
@@ -619,9 +634,10 @@
         
         let html = "";
         currentPracticeData.menus.forEach((m, i) => {
+            let opts = globalMenuTypes.map(t => `<option ${m.type===t?'selected':''}>${t}</option>`).join('');
             html += `<div class="practice-menu-card">
                 <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <input type="text" id="p_title_${i}" value="${m.title||''}" placeholder="練習メニュー名" style="flex:1;">
+                    <select id="p_type_${i}" style="flex:1;">${opts}</select>
                     <button class="btn btn-danger btn-compact" style="padding:8px;" onclick="window.removePracticeMenu(${i})">削除</button>
                 </div>`;
             
@@ -641,12 +657,12 @@
                 let badges = ""; m.statCols.forEach(c => badges += `<span class="stat-col-badge">${c} <button type="button" style="border:none;background:transparent;color:red;" onclick="window.removePracticeCol(${i}, '${c}')">×</button></span>`);
                 html += `<div>${badges}</div><div style="display:flex; gap:5px; margin-bottom:10px;"><input type="text" id="p_newcol_${i}" placeholder="項目名"><button type="button" class="btn btn-secondary btn-compact" style="padding:8px;" onclick="window.addPracticeCol(${i})">追加</button></div>`;
                 if(m.statCols.length > 0) {
-                    html += `<table><tr><th style="width:40px;">背</th><th>名前</th>`; m.statCols.forEach(c => html += `<th>${c}</th>`); html += `</tr>`;
+                    html += `<div class='table-wrap'><table><tr><th style="width:40px;">背</th><th>名前</th>`; m.statCols.forEach(c => html += `<th>${c}</th>`); html += `</tr>`;
                     globalStudents.forEach(st => {
                         html += `<tr><td>${st.number||'-'}</td><td style="text-align:left;">${st.name}</td>`;
                         m.statCols.forEach(c => { let val = (m.stats[st.id] && m.stats[st.id][c]) ? m.stats[st.id][c] : ''; html += `<td><input type="text" id="p_stat_${i}_${st.id}_${c}" value="${val}" class="stats-input"></td>`; });
                         html += `</tr>`;
-                    }); html += `</table>`;
+                    }); html += `</table></div>`;
                 }
             }
             html += `</div>`;
@@ -669,16 +685,19 @@
         commentsHtml += `<textarea id="pracCommentInput-${d}" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; margin-top:10px;" rows="2" placeholder="コメントする..."></textarea><button type="button" class="btn btn-primary" style="padding:10px; font-size:13px; margin-top:8px; width:100%;" onclick="window.postPracticeComment('${d}')">投稿する</button>`;
         document.getElementById('practiceCommentsArea').innerHTML = commentsHtml;
     };
-    window.addPracticeMenu = function() { window.syncPracticeDataFromDOM(); currentPracticeData.menus.push({ title: '', detailType: null, text: '', statCols: [], stats: {}, links: [] }); window.renderPractice(); };
+    window.addPracticeMenu = function() { window.syncPracticeDataFromDOM(); currentPracticeData.menus.push({ type: globalMenuTypes[0], detailType: null, text: '', statCols: [], stats: {}, links: [] }); window.renderPractice(); };
     window.removePracticeMenu = function(i) { window.syncPracticeDataFromDOM(); currentPracticeData.menus.splice(i, 1); window.renderPractice(); };
     window.addPracticeMenuLink = function(i) { window.syncPracticeDataFromDOM(); if(!currentPracticeData.menus[i].links) currentPracticeData.menus[i].links = []; currentPracticeData.menus[i].links.push({title:'', url:''}); window.renderPractice(); };
     window.removePracticeMenuLink = function(i, j) { window.syncPracticeDataFromDOM(); currentPracticeData.menus[i].links.splice(j, 1); window.renderPractice(); };
     window.setMenuDetailType = function(i, type) { window.syncPracticeDataFromDOM(); currentPracticeData.menus[i].detailType = type; window.renderPractice(); };
     window.addPracticeCol = function(i) { window.syncPracticeDataFromDOM(); let col = document.getElementById(`p_newcol_${i}`).value.trim(); if(col && !currentPracticeData.menus[i].statCols.includes(col)) { currentPracticeData.menus[i].statCols.push(col); window.renderPractice(); }};
     window.removePracticeCol = function(i, col) { window.syncPracticeDataFromDOM(); currentPracticeData.menus[i].statCols = currentPracticeData.menus[i].statCols.filter(c => c !== col); window.renderPractice(); };
-    window.savePractice = async function() { window.syncPracticeDataFromDOM(); await setDoc(doc(db, "practices", currentPracticeData.date), currentPracticeData); alert("練習記録を保存しました！"); document.getElementById('practiceDateSelect').value = ''; currentPracticeData = { date: '', menus: [] }; await loadAllData(); window.renderPractice(); };
+    window.savePractice = async function() { 
+        window.syncPracticeDataFromDOM(); await setDoc(doc(db, "practices", currentPracticeData.date), currentPracticeData); alert("練習記録を保存しました！"); 
+        document.getElementById('practiceDateSelect').value = ''; currentPracticeData = { date: '', menus: [] };
+        await loadAllData(); window.renderPractice();
+    };
     
-    // 練習コメント関数
     window.postPracticeComment = async function(date) {
         const text = document.getElementById(`pracCommentInput-${date}`).value.trim(); if(!text) return;
         let pRec = globalPractices.find(p => p.id === date); if (!pRec) return alert("先にこの日の練習記録を保存してください。");
@@ -706,20 +725,20 @@
     window.renderStats = function() { 
         const p = document.getElementById('statPeriodSelect').value; const ts = p === 'all' ? globalSchedules : globalSchedules.filter(s => s.date.startsWith(p)); const ta = p === 'all' ? globalAttendances : globalAttendances.filter(a => a.date.startsWith(p)); 
         if(ts.length===0) return document.getElementById('statsListArea').innerHTML = "予定データなし"; 
-        let html = `対象日数: ${ts.length}日<br><table><tr><th>背</th><th>名前</th><th>率</th><th>出</th><th>欠</th><th>遅</th><th>早</th><th>未</th></tr>`; 
+        let html = `対象日数: ${ts.length}日<br><div class='table-wrap'><table><tr><th>背</th><th>名前</th><th>率</th><th>出</th><th>欠</th><th>遅</th><th>早</th><th>未</th></tr>`; 
         globalStudents.forEach(st => { 
             const c = {出席:0, 欠席:0, 遅刻:0, 早退:0, 未入力:0}; ta.filter(a => a.name === st.name).forEach(x => {if(c[x.status]!==undefined)c[x.status]++;}); 
             c.未入力 = ts.length - (c.出席 + c.欠席 + c.遅刻 + c.早退);
             const denom = ts.length - c.未入力;
             const rate = denom > 0 ? Math.round(((c.出席+c.遅刻+c.早退)/denom)*100) : 0; 
             html += `<tr><td>${st.number||'-'}</td><td style="text-align:left;">${st.name}</td><td><b style="color:${rate<80?'#f44336':'#388e3c'}">${rate}%</b></td><td>${c.出席}</td><td>${c.欠席}</td><td>${c.遅刻}</td><td>${c.早退}</td><td>${c.未入力}</td></tr>`; 
-        }); document.getElementById('statsListArea').innerHTML = html + "</table>"; 
+        }); document.getElementById('statsListArea').innerHTML = html + "</table></div>"; 
     };
     window.renderPlayers = function() { 
-        let html = "<table><tr><th>属性/学年</th><th>背</th><th>名前</th><th>操作</th></tr>"; 
+        let html = "<div class='table-wrap'><table><tr><th>属性/学年</th><th>背</th><th>名前</th><th>操作</th></tr>"; 
         globalTeachers.forEach(t => { html += `<tr style="background:#e8f5e9;"><td>コーチ陣</td><td>-</td><td style="text-align:left;"><b>${t.name}</b></td><td><button class="btn btn-danger btn-compact" onclick="window.deleteTeacher('${t.id}', '${t.name}')">削除</button></td></tr>`; });
         globalStudents.forEach(p => { html += `<tr><td>${p.grade||'未'}</td><td>${p.number||'-'}</td><td style="text-align:left;"><b>${p.name}</b></td><td><button class="btn btn-danger btn-compact" onclick="window.deletePlayer('${p.id}', '${p.name}')">削除</button></td></tr>`; }); 
-        document.getElementById('playersListArea').innerHTML = html + "</table>"; 
+        document.getElementById('playersListArea').innerHTML = html + "</table></div>"; 
     };
     window.deleteTeacher = async function(id, name) { if(!confirm(`${name} アカウントを削除しますか？`)) return; await deleteDoc(doc(db, "teachers", id)); alert("削除しました。"); await loadAllData(); window.renderPlayers(); };
     window.deletePlayer = async function(id, name) { if(!confirm(`${name} 削除しますか？`)) return; await deleteDoc(doc(db, "students", id)); alert("削除しました。"); await loadAllData(); window.renderPlayers(); };
